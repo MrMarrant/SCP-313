@@ -19,7 +19,7 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self.NextLava = CurTime()
-	self.LavaCoolDown = 0.1
+	self.LavaCoolDown = 0.3
 	self:SetModel( "models/props_lab/monitor01a.mdl" )
 	self:SetModelScale( 1 )
 	self:PhysicsInit( SOLID_VPHYSICS ) 
@@ -38,7 +38,7 @@ function ENT:Use(ply)
 	if (ply:IsValid()) then
 		if (SCP_313.IsArmed()) then
 			self:BurnBabyBurn()
-		else
+		else --TODO : Faire le son de sèche main ou de fusée.
 			self:EmitSound("physics/plaster/drywall_impact_hard" .. math.random(1, 3) .. ".wav", 75, math.random(90,110), 0.5)
 		end
 	end
@@ -67,11 +67,11 @@ function ENT:Think()
 		ent:SetPos( self:GetPos())
 		ent:Spawn()
 		ent:Activate()
-		ent:Ignite(999)
 	end
 end
 
 function ENT:BurnBabyBurn()
 	self:GetPhysicsObject():SetVelocity( self:GetUp() * 10000 )
 	self.SendFarAway = true
+	timer.Simple( 30, function() if (self:IsValid()) then self.SendFarAway = false end end )
 end

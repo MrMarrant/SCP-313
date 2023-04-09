@@ -18,7 +18,7 @@
 * Return true if the entity will fly away.
 */
 function SCP_313.IsArmed()
-    local percent = 100
+    local percent = 1.5 --100
     assert(percent >= 0 and percent <= 100)
     return percent >= math.Rand(1, 100)
 end

@@ -17,22 +17,33 @@
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+--TODO : Certains ne sont pas enflammer, j'ai pas vraiment trouver la raison qui provoquait ça, hormis quand on en spawn vraiment beaucoup à la suite.
+local WaterLevelList = {
+	1,
+	2,
+	3
+}
+
 function ENT:Initialize()
 	self:SetModel( "models/hunter/tubes/circle2x2.mdl" )
 	self:PhysicsInit( SOLID_VPHYSICS ) 
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid( SOLID_VPHYSICS )
-	self:SetMaterial( "models/shadertest/shader4" )
+	self:SetMaterial( "models/props_lab/Tank_Glass001" )
+	self:Ignite(999)
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
 		phys:Wake()
 	end
-	timer.Simple( 0.5, function() if (self:IsValid()) then self:SetMoveType(MOVETYPE_NONE) end end ) -- TODO : Spam dans lma console le changement de movetype peut faire crash.
+	timer.Simple( 0.5, function() if (self:IsValid()) then self:SetMoveType(MOVETYPE_NONE) end end )
 	timer.Simple( 30, function() if (self:IsValid()) then self:Remove() end end )
 end
 
 function ENT:Think()
 	if (!self:IsOnGround() and self:GetMoveType() == MOVETYPE_NONE) then -- TODO : A revoir pour ceux qui ne sont pas sur le sol
 		--self:Remove()
+	end
+	if (table.HasValue( WaterLevelList, self:WaterLevel() )) then
+		self:Extinguish()
 	end
 end

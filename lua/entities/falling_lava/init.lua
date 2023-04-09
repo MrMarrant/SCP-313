@@ -17,20 +17,37 @@
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+local ClassList = {
+	"prop_door_rotating",
+	"prop_ragdoll",
+	"prop_physics"
+}
+
 function ENT:Initialize()
 	self:SetModel( "models/hunter/misc/sphere025x025.mdl" )
-	self:PhysicsInit( SOLID_VPHYSICS ) 
-	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:PhysicsInit( SOLID_VPHYSICS )
+	self:SetMoveType(MOVETYPE_FLYGRAVITY)
 	self:SetSolid( SOLID_VPHYSICS )
-	self:SetMaterial( "models/shadertest/shader4" )
+	self:SetMaterial( "models/props_lab/Tank_Glass001" )
+	self:SetCustomCollisionCheck( true )
+	self:Ignite(999)
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
 		phys:Wake()
 	end
 end
-
-function ENT:PhysicsCollide(data, phys)
-	if (data.HitEntity:GetClass() != "plasma_lava" and data.HitEntity:GetClass() != "scp_313") then
+function ENT:Touch(entTouch)
+	if (entTouch:IsPlayer()) then
+		if (!entTouch:HasGodMode()) then
+			entTouch:SetModel("models/player/charple.mdl")
+			entTouch:Ignite(10)
+		end
+		self:Remove()
+	elseif (entTouch:GetClass() == "plasma_lava" or entTouch:GetClass() == "scp_313") then
+		self:Remove()
+	elseif (table.HasValue( ClassList, entTouch:GetClass() )) then
+		entTouch:Ignite(10)
+	elseif (entTouch:IsWorld()) then
 		local ent = ents.Create( "plasma_lava" )
 		ent:SetPos( self:GetPos())
 		ent:Spawn()
@@ -41,6 +58,6 @@ function ENT:PhysicsCollide(data, phys)
 end
 
 hook.Add( "ShouldCollide", "ShouldCollide.SCP313Lava", function( ent1, ent2 )
-	if (ent1:GetClass() == "falling_lava" and ent2:GetClass() == "scp_313") then return false end
+	if ((ent1:GetClass() == "falling_lava" and ent2:GetClass() == "scp_313") or (ent1:GetClass() == "falling_lava" and ent2:GetClass() == "falling_lava")) then return false end
 	return true
 end )
