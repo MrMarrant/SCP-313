@@ -14,11 +14,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*
-* Return true if the entity will fly away.
-*/
-function SCP_313.IsArmed()
-    local percent = 100
-    assert(percent >= 0 and percent <= 100)
-    return percent >= math.Rand(1, 100)
-end
+ENT.Type = "anim"
+ENT.Base = "base_gmodentity"
+ENT.Author = "MrMarrant"
+ENT.PrintName = "Falling Lava"
+ENT.Spawnable = false
+ENT.Category = ""

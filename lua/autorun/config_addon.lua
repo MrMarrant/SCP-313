@@ -17,7 +17,7 @@
 SCP_313 = {}
 
 /*
-* Allows you to change all the files in a folder.
+* Allows you to charge all the files in a folder.
 * @string path of the folder to load.
 */
 function SCP_313.LoadDirectory(pathFolder)
@@ -27,8 +27,8 @@ function SCP_313.LoadDirectory(pathFolder)
         include(pathFolder..value)
     end
     for key, value in pairs(directories) do
-        LoadDirectory(pathFolder..value)
+        SCP_313.LoadDirectory(pathFolder..value)
     end
 end
 
-SCP_313.LoadDirectory("lib/")
+SCP_313.LoadDirectory("lib/functions/")
