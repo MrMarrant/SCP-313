@@ -17,39 +17,56 @@
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+local HardImpactSoundList = {
+	"physics/metal/metal_sheet_impact_hard2.wav",
+	"physics/metal/metal_sheet_impact_hard6.wav",
+	"physics/metal/metal_sheet_impact_hard7.wav",
+	"physics/metal/metal_sheet_impact_hard8.wav"
+}
+
+function ENT:Precache()
+	PrecacheParticleSystem( "Explosion" )
+end
+
+--TODO : Faire un effet d'explosion quand ça pète
 function ENT:Initialize()
+	self:Precache()
 	self.NextLava = CurTime()
 	self.LavaCoolDown = 0.3
-	self:SetModel( "models/props_lab/monitor01a.mdl" )
+	self.NextUse = CurTime()
+	self.UseCoolDown = 18
+	self:SetModel( "models/hand_dryer/hand_dryer.mdl" )
 	self:SetModelScale( 1 )
 	self:PhysicsInit( SOLID_VPHYSICS ) 
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid( SOLID_VPHYSICS ) 
 	self:SetUseType(SIMPLE_USE)
 	self:SetUnFreezable( true )
+	self:AddEffects( EF_NOINTERP )
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
-		--phys:EnableGravity( false )
 		phys:Wake()
 	end
 end
 
 function ENT:Use(ply)
+	if CurTime() < self.NextUse then return end
+	self.NextUse = CurTime() + self.UseCoolDown
 	if (ply:IsValid()) then
 		if (SCP_313.IsArmed()) then
 			self:BurnBabyBurn()
-		else --TODO : Faire le son de sèche main ou de fusée.
-			self:EmitSound("physics/plaster/drywall_impact_hard" .. math.random(1, 3) .. ".wav", 75, math.random(90,110), 0.5)
+		else
+			self:EmitSound("scp_313/hand_dryer.mp3")
 		end
 	end
 end
 
 function ENT:PhysicsCollide(data, phys)
 	if data.DeltaTime > 0.2 then
-		if data.Speed > 250 then --TODO : Trouver un autre son ?
-			self:EmitSound("physics/plaster/drywall_impact_hard" .. math.random(1, 3) .. ".wav", 75, math.random(90,110), 0.5)
+		if data.Speed > 250 then
+			self:EmitSound(table.Random( HardImpactSoundList ), 75, math.random(90,110), 0.5)
 		else
-			self:EmitSound("physics/plaster/drywall_impact_soft" .. math.random(1, 3) .. ".wav", 75, math.random(90,110), 0.2)
+			self:EmitSound("physics/metal/metal_solid_impact_soft" .. math.random(1, 3) .. ".wav", 75, math.random(90,110), 0.2)
 		end
 	end
 end
@@ -71,7 +88,13 @@ function ENT:Think()
 end
 
 function ENT:BurnBabyBurn()
+	SCP_313.DisplayEffectClientSide("Explosion", self:GetPos())
 	self:GetPhysicsObject():SetVelocity( self:GetUp() * 10000 )
 	self.SendFarAway = true
-	timer.Simple( 30, function() if (self:IsValid()) then self.SendFarAway = false end end )
+	self:EmitSound( "scp_313/lauch_sound.mp3")
+	self:StartLoopingSound("scp_313/booster_sound.wav")
+	timer.Simple( 30, function() if (self:IsValid()) then 
+		self.SendFarAway = false
+		self:StopSound("scp_313/booster_sound.wav")
+	end end )
 end

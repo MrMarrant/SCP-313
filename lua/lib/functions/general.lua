@@ -18,7 +18,26 @@
 * Return true if the entity will fly away.
 */
 function SCP_313.IsArmed()
-    local percent = 1.5 --100
+    local percent = 100
     assert(percent >= 0 and percent <= 100)
     return percent >= math.Rand(1, 100)
+end
+
+if (SERVER) then
+    function SCP_313.DisplayEffectClientSide(effectName, pos)
+        ParticleEffect( effectName, pos, Angle( 0, 0, 0 ) )
+        net.Start(SCP_313_CONFIG.DisplayEffectClientSide)
+            net.WriteVector(pos)
+            net.WriteString( effectName )
+        net.Broadcast()
+    end
+
+end
+
+if (CLIENT) then
+    net.Receive(SCP_313_CONFIG.DisplayEffectClientSide, function ()
+        local pos = net.ReadVector()
+        local effectName = net.ReadString()
+        ParticleEffect( effectName, pos, Angle( 0, 0, 0 ) )
+    end)
 end

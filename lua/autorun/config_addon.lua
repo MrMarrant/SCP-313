@@ -15,6 +15,13 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 SCP_313 = {}
+SCP_313_CONFIG  = {}
+
+SCP_313_CONFIG.DisplayEffectClientSide = "SCP_313_CONFIG.DisplayEffectClientSide"
+
+if (SERVER) then
+    util.AddNetworkString( SCP_313_CONFIG.DisplayEffectClientSide )
+end
 
 /*
 * Allows you to charge all the files in a folder.
