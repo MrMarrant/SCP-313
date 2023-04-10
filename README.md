@@ -5,6 +5,12 @@ Cet addon est une adaptation de l'objet SCP 313 de la fondation SCP, vous pouvez
 
 ### 🛠️ Fonctionnalité
 
+SCP-313 is identical in appearance and marking to a World Dryer Corp Model A electric hand dryer.
+SCP-313 has two significantly anomalous qualities – first and foremost, it is utterly indestructible and impervious to all forces available to us.
+The second effect occur when the button of the entity is push, each push represents a 1.5% chance that this property will activate.
+When this occurs, SCP-313 will begin to emit a stream of superheated plasma.
+The stream’s force and temperature increase exponentially until the object tears loose from its mounting and/or propels itself through the mounted surface.
+Temperatures of over 25,000 K and forces as great as 650 kN.
 
 ### ⚙️ Installations
 
