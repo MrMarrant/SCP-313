@@ -24,11 +24,12 @@ local HardImpactSoundList = {
 	"physics/metal/metal_sheet_impact_hard8.wav"
 }
 
+local EffectUse = "Explosion"
+
 function ENT:Precache()
-	PrecacheParticleSystem( "Explosion" )
+	PrecacheParticleSystem( EffectUse )
 end
 
---TODO : Faire un effet d'explosion quand ça pète
 function ENT:Initialize()
 	self:Precache()
 	self.NextLava = CurTime()
@@ -41,7 +42,6 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid( SOLID_VPHYSICS ) 
 	self:SetUseType(SIMPLE_USE)
-	self:SetUnFreezable( true )
 	self:AddEffects( EF_NOINTERP )
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
@@ -88,7 +88,10 @@ function ENT:Think()
 end
 
 function ENT:BurnBabyBurn()
-	SCP_313.DisplayEffectClientSide("Explosion", self:GetPos())
+	local phys = self:GetPhysicsObject()
+	phys:EnableMotion( true )
+	phys:Wake()
+	SCP_313.DisplayEffectClientSide(EffectUse, self:GetPos())
 	self:GetPhysicsObject():SetVelocity( self:GetUp() * 10000 )
 	self.SendFarAway = true
 	self:EmitSound( "scp_313/lauch_sound.mp3")
