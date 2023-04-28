@@ -38,4 +38,4 @@ function SCP_313.LoadDirectory(pathFolder)
     end
 end
 
-SCP_313.LoadDirectory("lib/functions/")
+SCP_313.LoadDirectory("scp_313/functions/")
