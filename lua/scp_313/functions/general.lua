@@ -18,7 +18,8 @@
 * Return true if the entity will fly away.
 */
 function SCP_313.IsArmed()
-    local percent = 1.5
+    local data = SCP_313.GetDataFromFile(SCP_313_CONFIG.PathPercentEffect)
+    local percent = data.PercentEffect
     assert(percent >= 0 and percent <= 100)
     return percent >= math.Rand(1, 100)
 end
