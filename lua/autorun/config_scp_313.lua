@@ -19,19 +19,10 @@ SCP_313_CONFIG  = {}
 
 SCP_313_CONFIG.PathPercentEffect = "data_scp_313/scp_313.json"
 SCP_313_CONFIG.DisplayEffectClientSide = "SCP_313_CONFIG.DisplayEffectClientSide"
+SCP_313_CONFIG.PercentEffect = CreateConVar( "SCP_313_PercentEffect", 1.5, {FCVAR_PROTECTED, FCVAR_ARCHIVE}, "Percentage chance to trigger the effect of SCP-313.", 0, 100 )
 
 if (SERVER) then
     util.AddNetworkString( SCP_313_CONFIG.DisplayEffectClientSide )
-end
-
-/*
-* Allows to return the data of a file.
-* @string path File path.
-*/
-function SCP_313.GetDataFromFile(path)
-    local fileFind = file.Read(path) or ""
-    local dataFind = util.JSONToTable(fileFind) or {}
-    return dataFind
 end
 
 /*
@@ -47,22 +38,6 @@ function SCP_313.LoadDirectory(pathFolder)
     for key, value in pairs(directories) do
         SCP_313.LoadDirectory(pathFolder..value)
     end
-end
-
--- DIRECTORY DATA FOLDER
-if not file.Exists("data_scp_313", "DATA") then
-    file.CreateDir("data_scp_313")
-end
-
-if (SERVER) then
-    if not file.Exists(SCP_313_CONFIG.PathPercentEffect, "DATA") then
-        local SERVER_VALUES = {}
-        SERVER_VALUES.PercentEffect = 1.5
-        file.Write(SCP_313_CONFIG.PathPercentEffect, util.TableToJSON(SERVER_VALUES, true))
-    end
-
-    local data = SCP_313.GetDataFromFile(SCP_313_CONFIG.PathPercentEffect)
-    SCP_313_CONFIG.PercentEffect = data.PercentEffect
 end
 
 SCP_313.LoadDirectory("scp_313/functions/")
