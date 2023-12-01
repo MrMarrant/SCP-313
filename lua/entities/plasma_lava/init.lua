@@ -50,5 +50,4 @@ end
 
 hook.Add( "ShouldCollide", "ShouldCollide.PlasmaLava", function( ent1, ent2 )
 	if ((ent1:GetClass() == "plasma_lava" and ent2:GetClass() == "plasma_lava") ) then return false end
-	return true
 end )

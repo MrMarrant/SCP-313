@@ -59,5 +59,4 @@ end
 
 hook.Add( "ShouldCollide", "ShouldCollide.SCP313Lava", function( ent1, ent2 )
 	if ((ent1:GetClass() == "falling_lava" and ent2:GetClass() == "scp_313") or (ent1:GetClass() == "falling_lava" and ent2:GetClass() == "falling_lava")) then return false end
-	return true
 end )
